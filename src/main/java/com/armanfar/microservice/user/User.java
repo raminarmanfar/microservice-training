@@ -1,5 +1,6 @@
 package com.armanfar.microservice.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.validation.constraints.Past;
@@ -11,12 +12,15 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
+//@JsonIgnoreProperties({"name", "birthdate"})
 public class User {
     private Integer id;
 
+    //@JsonIgnore
     @Size(min = 2, message = "Name should have at least 2 characters")
     private String name;
 
     @Past(message = "birthdate should be in the past")
+    @JsonProperty("birth_date")
     private LocalDate birthdate;
 }

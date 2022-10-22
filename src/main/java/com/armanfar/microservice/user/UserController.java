@@ -1,6 +1,9 @@
 package com.armanfar.microservice.user;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import com.armanfar.microservice.exception.UserNotFoundException;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -25,12 +28,15 @@ public class UserController {
     }
 
     @GetMapping(path = "/{id}")
-    public User retrieveUserById(@PathVariable int id) {
-
+    public EntityModel<User> retrieveUserById(@PathVariable int id) {
         User user = userDaoService.findOne(id);
         if (user == null)
             throw new UserNotFoundException(id);
-        return user;
+
+        EntityModel<User> entityModel = EntityModel.of(user);
+        WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+        entityModel.add(link.withRel("all-users"));
+        return entityModel;
     }
 
     @PostMapping
