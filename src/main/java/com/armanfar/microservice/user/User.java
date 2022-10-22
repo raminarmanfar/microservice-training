@@ -1,4 +1,4 @@
-package com.armanfar.helloworld.user;
+package com.armanfar.microservice.user;
 
 import lombok.*;
 

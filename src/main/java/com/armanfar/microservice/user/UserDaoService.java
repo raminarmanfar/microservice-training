@@ -1,4 +1,4 @@
-package com.armanfar.helloworld.user;
+package com.armanfar.microservice.user;
 
 import org.springframework.stereotype.Service;
 
@@ -34,11 +34,7 @@ public class UserDaoService {
         return user;
     }
 
-    public User delete(int id) {
-        User user = findOne(id);
-        if (user != null) {
-            users.remove(user);
-        }
-        return user;
+    public void deleteById(int id) {
+        users.removeIf(user -> user.getId().equals(id));
     }
 }
