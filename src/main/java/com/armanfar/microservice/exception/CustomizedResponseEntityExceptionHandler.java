@@ -1,7 +1,9 @@
 package com.armanfar.microservice.exception;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -25,4 +27,18 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                 request.getDescription(false), HttpStatus.NOT_FOUND);
         return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
     }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        StringBuilder errorMessageBuilder = new StringBuilder();
+        final int[] errorMessageIndex = {0};
+        ex.getFieldErrors().forEach(fieldError -> {
+            String message = ++errorMessageIndex[0] + ") " + fieldError.getDefaultMessage() + ", ";
+            errorMessageBuilder.append(message);
+        });
+        String errorMessage = "TotalErrors: " + ex.getErrorCount() + ", Errors: [" + errorMessageBuilder.substring(0, errorMessageBuilder.lastIndexOf(",")) + "]";
+        ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), errorMessage, request.getDescription(false), status);
+        return new ResponseEntity<>(errorDetails, status);
+    }
+
 }
