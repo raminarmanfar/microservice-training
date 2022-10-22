@@ -10,3 +10,8 @@ links to the swagger API:
 
 ### Accept xml
 In order to get results in the XML format, send your request with the header: Accept: application/xml
+
+### Accept language
+Just add Accept-language: your-language (en, de, tr, fa) in the header of your request.
+* Request-URI: http://localhost:4000/api/hello-world/i18n/ramin
+* If no accept-language added en will be used by default.
