@@ -13,7 +13,7 @@ import java.util.Locale;
 @RequestMapping("/hello-world")
 public class HelloWorldController {
 
-    private MessageSource messageSource;
+    private final MessageSource messageSource;
 
     public HelloWorldController(MessageSource messageSource) {
         this.messageSource = messageSource;
