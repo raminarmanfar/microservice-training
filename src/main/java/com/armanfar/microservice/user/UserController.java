@@ -2,9 +2,13 @@ package com.armanfar.microservice.user;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 import com.armanfar.microservice.exception.UserNotFoundException;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -25,6 +29,16 @@ public class UserController {
     @GetMapping
     public List<User> retrieveAllUsers() {
         return userDaoService.findAll();
+    }
+
+    @GetMapping("/dynamic-filtering")
+    public MappingJacksonValue retrieveAllUsersWithDynamicFiltering() {
+        List<User> users = userDaoService.findAll();
+        MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(users);
+        SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("name", "birth_date");
+        FilterProvider filterProvider = new SimpleFilterProvider().addFilter("DynamicUserBeanFilter", filter);
+        mappingJacksonValue.setFilters(filterProvider);
+        return mappingJacksonValue;
     }
 
     @GetMapping(path = "/{id}")

@@ -1,5 +1,6 @@
 package com.armanfar.microservice.user;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 //@JsonIgnoreProperties({"name", "birthdate"})
+@JsonFilter("DynamicUserBeanFilter")
 public class User {
     private Integer id;
 
